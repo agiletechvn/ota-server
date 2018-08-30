@@ -1,4 +1,4 @@
-# CodePush Server [source](https://github.com/lisong/code-push-server) 
+# CodePush Server [source](https://github.com/lisong/code-push-server)
 
 [![NPM](https://nodei.co/npm/code-push-server.svg?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/code-push-server/)
 
@@ -11,31 +11,26 @@
 [![Known Vulnerabilities](https://snyk.io/test/npm/code-push-server/badge.svg)](https://snyk.io/test/npm/code-push-server)
 [![Licenses](https://img.shields.io/npm/l/code-push-server.svg)](https://spdx.org/licenses/MIT)
 
-CodePush Server is a CodePush progam server! microsoft CodePush cloud is slow in China, we can use this to build our's. I use [qiniu](http://www.qiniu.com/) to store the files, because it's simple and quick!  Or you can use [local/s3/oss] storage, just modify config.js file, it's simple configure.
+CodePush Server is a CodePush progam server! We can use this to build our's. We can use cloud storage to store the files, because it's simple and quick! Or you can use [local/s3/oss] storage, just modify config.js file, it's simple configure.
 
-## qq交流群 
+## Correct use of code-push hot update
 
-- NO.2群: 628921445
-- NO.1群: 535491067 
-
-## 正确使用code-push热更新
-
-- 苹果App允许使用热更新[Apple's developer agreement](https://developer.apple.com/programs/ios/information/iOS_Program_Information_4_3_15.pdf), 为了不影响用户体验，规定必须使用静默更新。 Google Play不能使用静默更新，必须弹框告知用户App有更新。中国的android市场必须采用静默更新（如果弹框提示，App会被“请上传最新版本的二进制应用包”原因驳回）。
-- react-native 不同平台bundle包不一样，在使用code-push-server的时候必须创建不同的应用来区分(eg. CodePushDemo-ios 和 CodePushDemo-android)
-- react-native-code-push只更新资源文件,不会更新java和Objective C，所以npm升级依赖包版本的时候，如果依赖包使用的本地化实现, 这时候必须更改应用版本号(ios修改Info.plist中的CFBundleShortVersionString, android修改build.gradle中的versionName), 然后重新编译app发布到应用商店。
-- 推荐使用code-push release-react 命令发布应用，该命令合并了打包和发布命令(eg. code-push release-react CodePushDemo-ios ios -d Production)
-- 每次向App Store提交新的版本时，也应该基于该提交版本同时向code-push-server发布一个初始版本。(因为后面每次向code-push-server发布版本时，code-puse-server都会和初始版本比较，生成补丁版本)
-
+-   Apple App allows hot updates[Apple's developer agreement](https://developer.apple.com/programs/information/), In order not to affect the user experience, it is stipulated that silent updates must be used. Google Play can't use silent updates, and you must have a box to tell users that the app has an update. China's android market must use silent update (if the box prompts, the app will be rejected by "please upload the latest version of the binary application package").
+-
+-   react-native has different bundle for different platforms. When using code-push-server, each platform must have distinguish application(eg. CodePushDemo-ios and CodePushDemo-android)
+-   react-native-code-push only update the resource files, not Java and Objective C，so when you update the core system and need to change the version(ios modify the CFBundleShortVersionString in Info.plist, android modify versionName in build.gradle), the recompile the app to the app store.
+-   It is recommended to use code-push release-react to publish the application(eg. code-push release-react CodePushDemo-ios ios -d Production)
+-   Each time you submit a new version to App Store，you should also publish an initial version to code-push-server based on the submitted version. (Because each time you release a version to code-push-server，code-puse-server will be compared with the initial version to generate a patch version)
 
 ### shell login
 
 ```shell
-$ code-push login http://api.code-push.com #登录
+$ code-push login http://localhost:3000
 ```
 
-### [web](http://www.code-push.com) 
+### [web](http://www.code-push.com)
 
-访问：http://www.code-push.com
+access：http://localhost:3000
 
 ### client eg.
 
@@ -45,20 +40,18 @@ $ code-push login http://api.code-push.com #登录
 
 ## HOW TO INSTALL code-push-server
 
-- [docker](./docker/README.md) (recommend)
-- [manual operation](./docs/README.md)
+-   [docker](./docker/README.md) (recommend)
+-   [manual operation](./docs/README.md)
 
 ## HOW TO USE
 
-- [normal](./docs/react-native-code-push.md)
-- [react-native-code-push](https://github.com/Microsoft/react-native-code-push)
-- [code-push](https://github.com/Microsoft/code-push)
-
+-   [react-native-code-push](https://github.com/Microsoft/react-native-code-push)
+-   [code-push](https://github.com/Microsoft/code-push)
 
 ## ISSUES
+
 [code-push-server normal problem](https://github.com/lisong/code-push-server/issues/135)
 
 ## License
+
 MIT License [read](https://github.com/lisong/code-push-server/blob/master/LICENSE)
-
-

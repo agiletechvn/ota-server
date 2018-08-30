@@ -53,7 +53,6 @@ router.get('/updateCheck', (req, res, next) => {
       clientUniqueId
     )
     .then(rs => {
-      //灰度检测
       return clientManager
         .chosenMan(rs.rollout, deploymentKey, appVersion, clientUniqueId)
         .then(data => {

@@ -4,7 +4,7 @@ var _ = require('lodash');
 var config = require('../core/config');
 var validator = require('validator');
 var log4js = require('log4js');
-var log = log4js.getLogger("cps:auth");
+var log = log4js.getLogger('cps:auth');
 
 router.get('/login', (req, res) => {
   var codePushWebUrl = _.get(config, 'common.codePushWebUrl');
@@ -32,7 +32,7 @@ router.get('/register', (req, res) => {
 });
 
 router.post('/logout', (req, res) => {
-  res.send("ok");
+  res.send('ok');
 });
 
 router.post('/login', (req, res, next) => {
@@ -43,23 +43,27 @@ router.post('/login', (req, res, next) => {
   var password = _.trim(req.body.password);
   var tokenSecret = _.get(config, 'jwt.tokenSecret');
   log.debug(`login:${account}`);
-  accountManager.login(account, password)
-  .then((users) => {
-    var jwt = require('jsonwebtoken');
-    return jwt.sign({ uid: users.id, hash: security.md5(users.ack_code), expiredIn: 7200 }, tokenSecret);
-  })
-  .then((token) => {
-    log.debug(token);
-    res.send({status:'OK', results: {tokens: token}});
-  })
-  .catch((e) => {
-    if (e instanceof AppError.AppError) {
-      log.debug(e);
-      res.send({status:'ERROR', errorMessage: e.message});
-    } else {
-      next(e);
-    }
-  });
+  accountManager
+    .login(account, password)
+    .then(users => {
+      var jwt = require('jsonwebtoken');
+      return jwt.sign(
+        { uid: users.id, hash: security.md5(users.ack_code), expiredIn: 7200 },
+        tokenSecret
+      );
+    })
+    .then(token => {
+      log.debug(token);
+      res.send({ status: 'OK', results: { tokens: token } });
+    })
+    .catch(e => {
+      if (e instanceof AppError.AppError) {
+        log.debug(e);
+        res.send({ status: 'ERROR', errorMessage: e.message });
+      } else {
+        next(e);
+      }
+    });
 });
 
 module.exports = router;

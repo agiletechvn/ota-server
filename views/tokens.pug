@@ -65,7 +65,7 @@ block js
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           submit = false;
           if (errorThrown == 'Unauthorized') {
-            alert('请重新登录!');
+            alert('Please login again!');
             location.href = '/auth/login'
           }else {
             alert(errorThrown);
