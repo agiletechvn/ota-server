@@ -22,6 +22,14 @@ CodePush Server is a CodePush progam server! We can use this to build our's. We 
 -   It is recommended to use code-push release-react to publish the application(eg. code-push release-react CodePushDemo-ios ios -d Production)
 -   Each time you submit a new version to App Store，you should also publish an initial version to code-push-server based on the submitted version. (Because each time you release a version to code-push-server，code-puse-server will be compared with the initial version to generate a patch version)
 
+### start code-push-server
+
+```shell
+$ yarn start-docker
+$ cd docker && docker-compose exec server sh
+$ yarn dev # or yarn start
+```
+
 ### shell login
 
 ```shell
