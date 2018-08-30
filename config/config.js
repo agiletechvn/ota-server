@@ -74,7 +74,7 @@ config.development = {
   },
   // Config for smtp email，register module need validate user email project source https://github.com/nodemailer/nodemailer
   smtpConfig: {
-    host: 'smtp.aliyun.com',
+    host: 'smtp.gmail.com',
     port: 465,
     secure: true,
     auth: {
