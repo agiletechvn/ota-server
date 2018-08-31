@@ -25,9 +25,9 @@ CodePush Server is a CodePush progam server! We can use this to build our's. We 
 ### start code-push-server
 
 ```shell
-$ yarn start-docker
-$ cd docker && docker-compose exec server sh
-$ yarn dev # or yarn start
+$ cd docker
+$ docker-compose up -d # or docker-compose start
+$ docker-compose exec server yarn start # or yarn dev
 ```
 
 ### shell login

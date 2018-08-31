@@ -24,7 +24,6 @@
   "scripts": {
     "dev": "supervisor ./bin/www",
     "start": "node ./bin/www",
-    "start-docker": "cd docker && docker-compose up -d",
     "init": "node ./bin/db init",
     "upgrade": "node ./bin/db upgrade",
     "test": "make test",
