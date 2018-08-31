@@ -1,74 +1,51 @@
-# docker 部署 code-push-server
+# docker deployment code-push-server
 
->该文档用于描述docker部署code-push-server，实例包含三个部分
+>this document is used to guide how to deploy code-push-server on docker, including three parts:
 
-- code-push-server部分
-  - 更新包默认采用`local`存储(即存储在本地机器上)。使用docker volume存储方式，容器销毁不会导致数据丢失，除非人为删除volume。
-  - 内部使用pm2 cluster模式管理进程，默认开启进程数为cpu数，可以根据自己机器配置设置docker-compose.yml文件中deploy参数。
-  - docker-compose.yml只提供了应用的一部分参数设置，如需要设置其他配置，可以修改文件config.js。
-- mysql部分
-  - 数据使用docker volume存储方式，容器销毁不会导致数据丢失，除非人为删除volume。
-  - 默认应用使用root用户，为了安全可以创建权限相对较小的权限供code-push-server使用，只需要给予`select,update,insert`权限即可
-- redis部分
-  - `tryLoginTimes` 登录错误次数限制
-  - `updateCheckCache` 提升应用性能提升 
-  - `updateCheckCache` 灰度发布 
+- code-push-server
+  - The default storage is `local`, but can change the volume storage method. Container destruction does not result in data loss unless manually deleted.
+  - Internally use the pm2 cluster mode to manage processes. The default number of open processes is available cpu，but you can set the deploy parameter in the docker-compose.yml file.
+  - Most of mandatory options are in docker-compose.yml. If you want to set other configurations, you can modify the config.js file.
+- mysql
+  - Data is stored using docker volume, so unless intended deletion, the data is persistent. 
+  - The default application uses the root user. For security you can create a user with restricted permissions user for code-push-server to use `select,update,insert`.
+- redis
+  - `tryLoginTimes` Login error limit
+  - `updateCheckCache` Improve application performance   
 
-## 安装docker
+## Install docker
 
-参考docker官方安装教程
+Official docker installation
 
-- [>>mac点这里](https://docs.docker.com/docker-for-mac/install/)
-- [>>windows点这里](https://docs.docker.com/docker-for-windows/install/)
+- [>>mac](https://docs.docker.com/docker-for-mac/install/)
+- [>>windows](https://docs.docker.com/docker-for-windows/install/)
 - [>>linux](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
 
 
-`$ docker info` 能成功输出相关信息，则安装成功，才能继续下面步骤
+`$ docker info` If installation is successfully, you can see the successful output.
 
-## 启动swarm
+## Start swarm
 
 ```shell
 $ sudo docker swarm init
 ```
 
+## jwt.tokenSecret modification
 
-## 获取代码
+> code-push-server verify the json web token encryption method used by the login authentication. The symmetric encryption algorithm is public, so it is important to modify the tokenSecret value in config.js.
 
-```shell
-$ git clone https://github.com/lisong/code-push-server.git
-$ cd code-push-server/docker
-```
+*Very important*
 
-## 修改配置文件
+> Open `https://www.grc.com/passwords.htm` to optain `63 random alpha-numeric characters` as a key
 
-```shell
-$ vim docker-compose.yml
-```
-
-*将`DOWNLOAD_URL`中`YOU_MACHINE_IP`替换成本机ip*
-
-*将`MYSQL_HOST`中`YOU_MACHINE_IP`替换成本机ip*
-
-*将`REDIS_HOST`中`YOU_MACHINE_IP`替换成本机ip*
-
-## jwt.tokenSecret修改
-
-> code-push-server 验证登录验证方式使用的json web token加密方式,该对称加密算法是公开的，所以修改config.js中tokenSecret值很重要。
-
-*非常重要！非常重要！ 非常重要！*
-
-> 可以打开连接`https://www.grc.com/passwords.htm`获取 `63 random alpha-numeric characters`类型的随机生成数作为密钥
-
-## 部署
+## Deploy
 
 ```shell
 $ sudo docker stack deploy -c docker-compose.yml code-push-server
 ```
 
-> 如果网速不佳，需要漫长而耐心的等待。。。去和妹子聊会天吧^_^
 
-
-## 查看进展
+## View progress
 
 ```shell
 $ sudo docker service ls
@@ -77,13 +54,13 @@ $ sudo docker service ps code-push-server_redis
 $ sudo docker service ps code-push-server_server
 ```
 
-> 确认`CURRENT STATE` 为 `Running about ...`, 则已经部署完成
+> Confirm `CURRENT STATE` for `Running about ...`, to make sure it has been deployed
 
-## 访问接口简单验证
+## Simple verification of the access interface
 
 `$ curl -I http://127.0.0.1:3000/`
 
-返回`200 OK`
+return `200 OK`
 
 ```http
 HTTP/1.1 200 OK
@@ -100,19 +77,19 @@ Date: Sat, 25 Aug 2018 15:45:46 GMT
 Connection: keep-alive
 ```
 
-## 浏览器登录
+## Browser login
 
-> 默认用户名:admin 密码:123456 记得要修改默认密码哦
-> 如果登录连续输错密码超过一定次数，会限定无法再登录. 需要清空redis缓存
+> Default username:admin password:123456 Remember to change the default password
+> If you enter the wrong password for more than a certain number of times, you will be restricted from logging in again. To fix this you need to clear the redis cache.
 
 ```shell
-$ redis-cli -p6388  # 进入redis
+$ redis-cli -p6388  # enter redis
 > flushall
 > quit
 ```
 
 
-## 查看服务日志
+## View service log
 
 ```shell
 $ sudo docker service logs code-push-server_server
@@ -120,16 +97,16 @@ $ sudo docker service logs code-push-server_db
 $ sudo docker service logs code-push-server_redis
 ```
 
-## 查看存储 `docker volume ls`
+## View storage `docker volume ls`
 
-DRIVER | VOLUME NAME |  描述    
------- | ----- | -------
-local  | code-push-server_data-mysql | 数据库存储数据目录
-local  | code-push-server_data-storage | 存储打包文件目录
-local  | code-push-server_data-tmp | 用于计算更新包差异文件临时目录
-local  | code-push-server_data-redis | redis落地数据
+| DRIVER | VOLUME NAME                   | DESCRIPTION                                |
+| ------ | ----------------------------- | ------------------------------------------ |
+| local  | code-push-server_data-mysql   | Database storage                           |
+| local  | code-push-server_data-storage | Storage package                            |
+| local  | code-push-server_data-tmp     | Temporary directory for calculating update |
+| local  | code-push-server_data-redis   | redis data                                 |
 
-## 销毁退出应用
+## Destroy application
 
 ```bash
 $ sudo docker stack rm code-push-server

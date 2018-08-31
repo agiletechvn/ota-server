@@ -41,7 +41,7 @@ config.development = {
   // Config for local storage when storageType value is "local".
   local: {
     // Binary files storage dir, Do not use tmpdir and it's public download dir.
-    storageDir: process.env.STORAGE_DIR || '/Users/tablee/workspaces/storage',
+    storageDir: process.env.STORAGE_DIR,
     // Binary files download host address which Code Push Server listen to. the files storage in storageDir.
     downloadUrl: process.env.DOWNLOAD_URL,
     // public static download spacename.
