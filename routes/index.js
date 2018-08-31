@@ -4,6 +4,7 @@ var Promise = require('bluebird');
 var AppError = require('../core/app-error');
 var middleware = require('../core/middleware');
 var ClientManager = require('../core/services/client-manager');
+var DataCenterManager = require('../core/services/datacenter-manager');
 var _ = require('lodash');
 var log4js = require('log4js');
 var log = log4js.getLogger('cps:index');
@@ -34,6 +35,21 @@ router.get('/README.md', (req, res, next) => {
 
 router.get('/tokens', (req, res) => {
   res.render('tokens', { title: 'Receive token' });
+});
+
+router.get('/packageBundle/:packageHash', (req, res, next) => {
+  var packageHash = _.trim(req.params.packageHash);
+  var dataCenterManager = new DataCenterManager();
+  try {
+    var packageBundle = dataCenterManager.getPackageBundle(packageHash);
+    res.send(packageBundle);
+  } catch (e) {
+    if (e instanceof AppError.AppError) {
+      res.status(404).send(e.message);
+    } else {
+      next(e);
+    }
+  }
 });
 
 router.get('/updateCheck', (req, res, next) => {
