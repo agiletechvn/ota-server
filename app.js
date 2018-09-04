@@ -16,7 +16,7 @@ var users = require('./routes/users');
 var apps = require('./routes/apps');
 var AppError = require('./core/app-error');
 var log4js = require('log4js');
-var log = log4js.getLogger("cps:app");
+var log = log4js.getLogger('cps:app');
 var app = express();
 app.use(helmet());
 app.disable('x-powered-by');
@@ -24,7 +24,12 @@ app.disable('x-powered-by');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(log4js.connectLogger(log4js.getLogger("http"), {level: log4js.levels.INFO, nolog:'\\.gif|\\.jpg|\\.js|\\.css$' }));
+app.use(
+  log4js.connectLogger(log4js.getLogger('http'), {
+    level: log4js.levels.INFO,
+    nolog: '\\.gif|\\.jpg|\\.js|\\.css$'
+  })
+);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -33,23 +38,30 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //use nginx in production
 if (app.get('env') === 'development') {
-  log.debug("set Access-Control Header");
+  log.debug('set Access-Control Header');
   app.all('*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    res.header("Access-Control-Allow-Methods","PUT,POST,GET,PATCH,DELETE,OPTIONS");
-    log.debug("use set Access-Control Header");
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, X-CodePush-SDK-Version, Content-Type, Accept, Authorization'
+    );
+    res.header(
+      'Access-Control-Allow-Methods',
+      'PUT,POST,GET,PATCH,DELETE,OPTIONS'
+    );
+    log.debug('use set Access-Control Header');
     next();
   });
 }
 
-log.debug("config common.storageType value: " + _.get(config, 'common.storageType'));
+log.debug(
+  'config common.storageType value: ' + _.get(config, 'common.storageType')
+);
 
 if (_.get(config, 'common.storageType') === 'local') {
   var localStorageDir = _.get(config, 'local.storageDir');
   if (localStorageDir) {
-
-    log.debug("config common.storageDir value: " + localStorageDir);
+    log.debug('config common.storageDir value: ' + localStorageDir);
 
     if (!fs.existsSync(localStorageDir)) {
       var e = new Error(`Please create dir ${localStorageDir}`);
@@ -64,8 +76,13 @@ if (_.get(config, 'common.storageType') === 'local') {
       log.error(e);
       throw e;
     }
-    log.debug("static download uri value: " + _.get(config, 'local.public', '/download'));
-    app.use(_.get(config, 'local.public', '/download'), express.static(localStorageDir));
+    log.debug(
+      'static download uri value: ' + _.get(config, 'local.public', '/download')
+    );
+    app.use(
+      _.get(config, 'local.public', '/download'),
+      express.static(localStorageDir)
+    );
   } else {
     log.error('please config local storageDir');
   }
