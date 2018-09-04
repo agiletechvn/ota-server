@@ -1,4 +1,4 @@
-# CodePush Server [source](https://github.com/lisong/code-push-server)
+# CodePush Server [source](https://github.com/agiletechvn/code-push-server.git)
 
 [![NPM](https://nodei.co/npm/code-push-server.svg?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/code-push-server/)
 
