@@ -12,7 +12,7 @@
     "code",
     "push"
   ],
-  "author": "Tab Lee <lisong2010@gmail.com> (https://github.com/lisong/)",
+  "author": "Tab Lee <tubackkhoa@gmail.com> (https://github.com/lisong/)",
   "bin": {
     "code-push-server": "./bin/www",
     "code-push-server-db": "./bin/db"
@@ -24,6 +24,8 @@
   "scripts": {
     "dev": "supervisor ./bin/www",
     "start": "node ./bin/www",
+    "init-docker": "cd docker && docker-compose up -d",
+    "start-docker": "cd docker && docker-compose exec server yarn start",
     "init": "node ./bin/db init",
     "upgrade": "node ./bin/db upgrade",
     "test": "make test",
